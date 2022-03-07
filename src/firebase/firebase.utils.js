@@ -3,14 +3,38 @@ import 'firebase/compat/firestore';
 import 'firebase/compat/auth';
 
 const config = {
-  apiKey: "AIzaSyDPzTiPd-9GEv6r4eVTi6OL1Ha_3Aid7dA",
-  authDomain: "shopping-store-db-cb89f.firebaseapp.com",
-  projectId: "shopping-store-db-cb89f",
-  storageBucket: "shopping-store-db-cb89f.appspot.com",
-  messagingSenderId: "730597415024",
-  appId: "1:730597415024:web:3394d62986975e6c903cb5",
-  measurementId: "G-P58PB3QV1D"
+  apiKey: "AIzaSyDakifl1-EMNO6fuZeXIneNCAuksM_8DP4",
+  authDomain: "shopping-store-7da92.firebaseapp.com",
+  projectId: "shopping-store-7da92",
+  storageBucket: "shopping-store-7da92.appspot.com",
+  messagingSenderId: "1002692177281",
+  appId: "1:1002692177281:web:24f31e91415f84036e0c80",
+  measurementId: "G-PMB4FMCJY2"
 }
+
+export const createUserProfileDocument = async (userAuth, additionalData) => {
+  if(!userAuth) 
+    return;
+  const userRef = firestore.doc(`users/${userAuth.uid}`);
+  const snapShot = await userRef.get();
+
+  if(!snapShot.exists){
+    const { displayName, email } = userAuth;
+    const createdAt = new Date();
+
+    try {
+      await userRef.set({
+        displayName,
+        email,
+        createdAt,
+        ...additionalData
+      })
+    } catch (error) {
+      console.log('Error Creating User', error.message);
+    }
+  }
+  return userRef; 
+};
 
 firebase.initializeApp(config);
 
